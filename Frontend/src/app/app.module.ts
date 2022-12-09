@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AngularFireModule } from '@angular/fire/compat';
-import { firebaseConfig } from '../environments/firebaseConfig';
+import { firebaseConfig } from '../environments/firebase-config';
 
 @NgModule({
   declarations: [AppComponent],
