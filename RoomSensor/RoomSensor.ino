@@ -22,7 +22,10 @@
 // WiFi network and Firebase details
 #include "credentials.h"
 
+bool useTwoSensors = true;
+
 Adafruit_BME280 bme; // I2C
+Adafruit_BME280 bme2; // I2C
 
 int lightSensorPin = A0;
 
@@ -79,7 +82,7 @@ void setup() {
   Firebase.reconnectWiFi(true);
   fbdo.setResponseSize(4096);
 
-  String base_path = "/" + DEVICE_NAME + "/";
+  String base_path = "/" + ROOM_NAME + "/";
 
   /* Assign the callback function for the long running token generation task */
   config.token_status_callback = tokenStatusCallback; // see addons/TokenHelper.h
@@ -92,8 +95,16 @@ void setup() {
   bool status = bme.begin(0x76);
 
   if (!status) {
-    Serial.println("Could not find a valid BME280 sensor, check wiring!");
+    Serial.println("Could not find a valid BME280 sensor at address 0x76, check wiring!");
     while (1);
+  }
+
+  if (useTwoSensors) {
+    status = bme2.begin(0x77);
+
+    if (!status) {
+      Serial.println("Could not find a valid second BME280 sensor at address 0x77, check wiring!");
+    }
   }
 }
 
@@ -128,7 +139,7 @@ void loop() {
   dtostrf(timestamp, 0 , 0 , strTimestamp);
 
   String path = "/UsersData/";
-  path += DEVICE_NAME; //<- user uid of current user that sign in with Emal/Password
+  path += ROOM_NAME; //<- user uid of current user that sign in with Emal/Password
   path += "/";
   path += strTimestamp;
   path += "/";
@@ -140,11 +151,53 @@ void loop() {
   json.set("light", light);
   json.set("timestamp/.sv", "timestamp"); // .sv is the required place holder for sever value which currently supports only string "timestamp" as a value
   // Set data with timestamp
-   Serial.printf("Set data with timestamp... %s\n", Firebase.RTDB.setJSON(&fbdo, path, &json) ? fbdo.to<FirebaseJson>().raw() : fbdo.errorReason().c_str());
+  Serial.printf("Set data with timestamp... %s\n", Firebase.RTDB.setJSON(&fbdo, path, &json) ? fbdo.to<FirebaseJson>().raw() : fbdo.errorReason().c_str());
 
 
-  // Put the device into deep sleep mode for 1 minutes
-  ESP.deepSleep(1 * 60 * 1000000);
+
+  if (useTwoSensors) {
+    // Read values from BME280 sensor
+    float temperature = bme2.readTemperature();
+    float pressure = bme2.readPressure() / 100.0; // convert to hPa
+    float humidity = bme2.readHumidity();
+    float light = Lux();
+
+    // Print sensor readings to serial monitor
+    Serial.print("Temperature: ");
+    Serial.print(temperature);
+    Serial.println(" *C");
+    Serial.print("Pressure: ");
+    Serial.print(pressure);
+    Serial.println(" hPa");
+    Serial.print("Humidity: ");
+    Serial.print(humidity);
+    Serial.println(" %");
+    Serial.print("Light: ");
+    Serial.print(light);
+    Serial.println("");
+
+    char strTimestamp[20];
+    dtostrf(timestamp, 0 , 0 , strTimestamp);
+
+    String path = "/UsersData/";
+    path += ROOM_NAME2; //<- user uid of current user that sign in with Emal/Password
+    path += "/";
+    path += strTimestamp;
+    path += "/";
+
+    FirebaseJson json;
+    json.set("temperature", temperature);
+    json.set("pressure", pressure);
+    json.set("humidity", humidity);
+    json.set("light", light);
+    json.set("timestamp/.sv", "timestamp"); // .sv is the required place holder for sever value which currently supports only string "timestamp" as a value
+    // Set data with timestamp
+    Serial.printf("Set data with timestamp... %s\n", Firebase.RTDB.setJSON(&fbdo, path, &json) ? fbdo.to<FirebaseJson>().raw() : fbdo.errorReason().c_str());
+  }
+
+  // Put the device into deep sleep mode for 15 minutes
+  //delay(10000);
+  ESP.deepSleep(15 * 60 * 1000000);
 }
 
 float Lux() {    //funktion von StackOverflow
