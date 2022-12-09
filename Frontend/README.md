@@ -1,5 +1,5 @@
 # Auth Files
-create file in environments/firebase-config.json
+create file in environments/firebase-config.ts
 
 export const firebaseConfig = {
   apiKey: 'YOUR_API_KEY',

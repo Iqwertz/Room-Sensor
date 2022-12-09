@@ -10,5 +10,9 @@ export class FirebaseService {
   database: Observable<any>;
   constructor(db: AngularFireDatabase) {
     this.database = db.object('UsersData').valueChanges();
+
+    this.database.subscribe((data) => {
+      console.log('FirebaseService: ', data);
+    });
   }
 }
