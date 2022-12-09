@@ -4,9 +4,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { firebaseConfig } from 'src/environments/firebase-config';
 import { MainComponent } from './sites/main/main.component';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
 @NgModule({
   declarations: [AppComponent, MainComponent],
@@ -14,9 +14,8 @@ import { MainComponent } from './sites/main/main.component';
     BrowserModule,
     AppRoutingModule,
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
-    provideFirestore(() => getFirestore()),
   ],
-  providers: [],
+  providers: [{ provide: FIREBASE_OPTIONS, useValue: firebaseConfig }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
