@@ -27,10 +27,6 @@ export class CurrentSensorDataComponent implements OnInit {
   ngOnInit(): void {}
 
   getMostRecentData(data: any) {
-    // return this.data[0];
-
-    //sort the list by date and select the last element
-    console.log(data);
     //convert object to array
     let dataArr = Object.keys(data).map((key) => data[key]);
     //sort by timestamp

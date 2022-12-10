@@ -10,9 +10,10 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { CurrentSensorDataComponent } from './components/current-sensor-data/current-sensor-data.component';
 import { SwiperModule } from 'swiper/angular';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ChartComponent } from './sites/main/chart/chart.component';
 
 @NgModule({
-  declarations: [AppComponent, MainComponent, CurrentSensorDataComponent],
+  declarations: [AppComponent, MainComponent, CurrentSensorDataComponent, ChartComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
