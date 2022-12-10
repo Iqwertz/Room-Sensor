@@ -16,6 +16,14 @@
     z-index: -1;
 }
 
+.chart-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 80%;
+}
+
 @import "~swiper/css";
 @import "~swiper/css/pagination";
 .swiper {

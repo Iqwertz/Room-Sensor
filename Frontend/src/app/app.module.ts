@@ -10,16 +10,29 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { CurrentSensorDataComponent } from './components/current-sensor-data/current-sensor-data.component';
 import { SwiperModule } from 'swiper/angular';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ChartComponent } from './sites/main/chart/chart.component';
+import { ChartComponent } from './sites/chart/chart.component';
+import { ChartContainerComponent } from './components/chart-container/chart-container.component';
+import { NgChartsModule } from 'ng2-charts';
+import { ChartButtonComponent } from './components/chart-button/chart-button.component';
+import { SimpleViewButtonComponent } from './components/simple-view-button/simple-view-button.component';
 
 @NgModule({
-  declarations: [AppComponent, MainComponent, CurrentSensorDataComponent, ChartComponent],
+  declarations: [
+    AppComponent,
+    MainComponent,
+    CurrentSensorDataComponent,
+    ChartComponent,
+    ChartContainerComponent,
+    ChartButtonComponent,
+    SimpleViewButtonComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     SwiperModule,
     FontAwesomeModule,
+    NgChartsModule,
   ],
   providers: [{ provide: FIREBASE_OPTIONS, useValue: firebaseConfig }],
   bootstrap: [AppComponent],

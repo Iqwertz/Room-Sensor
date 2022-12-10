@@ -2,13 +2,11 @@ import {
   Component,
   HostBinding,
   OnInit,
+  AfterViewInit,
   ViewEncapsulation,
 } from '@angular/core';
 import { FirebaseService } from '../../services/firebase.service';
-
-import { SwiperComponent } from 'swiper/angular';
 import SwiperCore, { Pagination } from 'swiper';
-import { SafeStyle } from '@angular/platform-browser';
 
 SwiperCore.use([Pagination]);
 
@@ -17,7 +15,7 @@ SwiperCore.use([Pagination]);
   styleUrls: ['./main.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, AfterViewInit {
   constructor(public firebaseService: FirebaseService) {}
 
   database: any;
@@ -31,6 +29,12 @@ export class MainComponent implements OnInit {
       this.database = data;
       this.updateBackgroundImage();
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.database = this.firebaseService.lastDatabaseScreenshot;
+    console.log(this.database);
+    this.updateBackgroundImage();
   }
 
   trans(event: any) {
@@ -50,7 +54,7 @@ export class MainComponent implements OnInit {
 
   backgroundImageFromTemperature(temperature: number): string {
     console.log('temperature: ', temperature);
-    if (temperature < 0) {
+    if (temperature < 5) {
       return 'assets/winter.jpg';
     } else if (temperature < 15) {
       return 'assets/autumn.jpg';

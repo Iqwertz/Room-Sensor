@@ -1,0 +1,20 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url(../../../assets/winter.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+}
+
+.simple-view-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 90%;
+}
