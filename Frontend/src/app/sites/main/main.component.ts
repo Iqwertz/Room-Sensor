@@ -1,9 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FirebaseService } from '../../services/firebase.service';
+
+import { SwiperComponent } from 'swiper/angular';
+import SwiperCore, { Pagination } from 'swiper';
+
+SwiperCore.use([Pagination]);
 
 @Component({
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MainComponent implements OnInit {
   constructor(public firebaseService: FirebaseService) {}

@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="box">
+        <h1 class="box-title">{{ data.key }}</h1>
+
+        <div class="box-body">
+            <div class="box-body-item">
+                <fa-icon [icon]="faTemperature"></fa-icon>
+                <div class="box-body-item-value">
+                    {{ roundFloat(getMostRecentData(data.value).temperature, 2) }} °C
+                </div>
+            </div>
+            <div class="box-body-item">
+                <fa-icon [icon]="faHumidity"></fa-icon>
+                <div class="box-body-item-value">
+                    {{ roundFloat(getMostRecentData(data.value).humidity, 2) }} %
+                </div>
+            </div>
+            <div class="box-body-item">
+                <fa-icon [icon]="faGauge"></fa-icon>
+                <div class="box-body-item-value">
+                    {{ roundFloat(getMostRecentData(data.value).pressure, 2) }} hPa
+                </div>
+            </div>
+            <div class="box-body-item">
+                <fa-icon [icon]="faLight"></fa-icon>
+                <div class="box-body-item-value">
+                    {{ roundFloat(getMostRecentData(data.value).light, 2) }} Lux
+                </div>
+            </div>
+        </div>
+
+        <div class="timestamp">
+            <div class="box-body-item-value">
+                {{ formatTimestamp( roundFloat(getMostRecentData(data.value).timestamp, 2) ) }}
+            </div>
+        </div>
+    </div>
+</div>
