@@ -196,8 +196,8 @@ void loop() {
   }
 
   // Put the device into deep sleep mode for 15 minutes
-  delay(10* 60 * 1000);
-  //ESP.deepSleep(15 * 60 * 1000000);
+  //delay(1* 30 * 1000);
+  ESP.deepSleep(15 * 60 * 1000000);
 }
 
 float Lux() {    //funktion von StackOverflow

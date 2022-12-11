@@ -2,6 +2,7 @@
     width: 100vw;
     height: 100vh;
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     background-image: url(../../../assets/winter.jpg);
@@ -12,9 +13,7 @@
 }
 
 .simple-view-button {
-    width: 100%;
-    display: flex;
-    justify-content: center;
     position: absolute;
-    top: 90%;
+    top: 10px;
+    right: 10px;
 }

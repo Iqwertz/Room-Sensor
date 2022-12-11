@@ -2,13 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { FirebaseService } from '../../services/firebase.service';
+import { environment } from '../../../environments/environment';
 
 export interface sensorDataObject {
   temperature: number[];
   humidity: number[];
   pressure: number[];
   light: number[];
-  timestamps: number[];
+  timestamps: string[];
 }
 
 export interface FirebaseRooms {
@@ -25,6 +26,24 @@ export interface FirebaseSensorDataEntry {
   pressure: number;
   light: number;
   timestamp: number;
+}
+
+export interface DatabaseSelectOptions {
+  [key: string]: DatabaseSelectOptionsEntry;
+}
+
+export interface TimeIntervalSelectOption {
+  //TODO: implement
+  start: number;
+  end: number;
+}
+
+export interface DatabaseSelectOptionsEntry {
+  temperature: boolean;
+  humidity: boolean;
+  pressure: boolean;
+  light: boolean;
+  [key: string]: boolean;
 }
 
 @Component({
@@ -47,20 +66,16 @@ export class ChartContainerComponent implements OnInit {
    */
   public lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
-    scales: {
-      small: {
-        type: 'linear',
-        position: 'left',
-        bounds: 'ticks',
-      },
-      big: {
-        type: 'linear',
-        position: 'right',
-      },
-    },
+    maintainAspectRatio: false,
   };
 
   public lineChartLegend = true;
+
+  selectOptions: DatabaseSelectOptions | null = null;
+  timeInterval: TimeIntervalSelectOption = {
+    start: -1,
+    end: -1,
+  };
 
   constructor(private firebaseService: FirebaseService) {}
 
@@ -72,41 +87,62 @@ export class ChartContainerComponent implements OnInit {
     });
   }
 
+  updateChart() {
+    this.generateChart(this.firebaseService.lastDatabaseScreenshot);
+  }
+
   generateChart(data: FirebaseRooms) {
     if (!data) return;
+
+    if (!this.selectOptions) {
+      this.generateSelectOptions(data);
+    }
+
+    if (!this.selectOptions) return;
 
     this.lineChartData.datasets = [];
     this.lineChartData.labels = [];
 
     for (const [roomKey, roomValue] of Object.entries(data)) {
       let convertedData = this.convertToSensorDataObject(roomValue);
+      let options = this.selectOptions[roomKey];
 
+      let counter = 0;
       //add converted Data to lineChartData
       for (const [key, value] of Object.entries(convertedData)) {
         if (key == 'timestamps') {
           this.lineChartData.labels = value;
         } else {
-          let yAxisId = 'small';
-          if (this.calculateAverage(value) < 100) {
-            yAxisId = 'small';
-          } else {
-            yAxisId = 'big';
-          }
+          if (!options[key]) continue;
           this.lineChartData.datasets.push({
             data: value,
             label: roomKey + '/' + key,
             fill: false,
             tension: 0.4,
-            borderColor: 'black',
+            borderColor: environment.chartBorderColors[counter],
             backgroundColor: 'rgba(255,0,0,0.3)',
-            yAxisID: yAxisId,
           });
+
+          counter++;
         }
       }
     }
     this.chart?.update();
 
     console.log(this.lineChartData);
+  }
+
+  generateSelectOptions(data: FirebaseRooms) {
+    this.selectOptions = {};
+
+    for (const [roomKey, roomValue] of Object.entries(data)) {
+      this.selectOptions[roomKey] = {
+        temperature: true,
+        humidity: true,
+        pressure: false,
+        light: false,
+      };
+    }
   }
 
   calculateAverage(a: number[]) {
@@ -133,9 +169,19 @@ export class ChartContainerComponent implements OnInit {
       sensorData.humidity.push(value.humidity);
       sensorData.pressure.push(value.pressure);
       sensorData.light.push(value.light);
-      sensorData.timestamps.push(value.timestamp);
+      sensorData.timestamps.push(this.convertTimestampToDate(value.timestamp));
     }
 
     return sensorData;
+  }
+
+  //convert timestamp to dd/mm/yyyy date
+  convertTimestampToDate(timestamp: number) {
+    let date = new Date(timestamp);
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+
+    return day + '/' + month + '/' + year;
   }
 }

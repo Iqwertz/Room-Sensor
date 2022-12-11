@@ -15,6 +15,8 @@ import { ChartContainerComponent } from './components/chart-container/chart-cont
 import { NgChartsModule } from 'ng2-charts';
 import { ChartButtonComponent } from './components/chart-button/chart-button.component';
 import { SimpleViewButtonComponent } from './components/simple-view-button/simple-view-button.component';
+import { ChartOptionsComponent } from './components/chart-options/chart-options.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { SimpleViewButtonComponent } from './components/simple-view-button/simpl
     ChartContainerComponent,
     ChartButtonComponent,
     SimpleViewButtonComponent,
+    ChartOptionsComponent,
   ],
   imports: [
     BrowserModule,

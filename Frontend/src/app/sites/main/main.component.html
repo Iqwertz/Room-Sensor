@@ -1,6 +1,6 @@
 <div class="background" [ngStyle]="{ 'background-image': 'url(' + backgroundImage + ')' }">
-    <swiper [pagination]="true" (slideChangeTransitionEnd)="trans($event)" class="mySwiper">
-        <ng-template swiperSlide *ngFor="let item of firebaseService.database | async | keyvalue">
+    <swiper *ngIf="database" [pagination]="true" (slideChangeTransitionEnd)="trans($event)" class="mySwiper">
+        <ng-template swiperSlide *ngFor="let item of database | keyvalue">
             <app-current-sensor-data [data]="item"></app-current-sensor-data>
         </ng-template>
     </swiper>

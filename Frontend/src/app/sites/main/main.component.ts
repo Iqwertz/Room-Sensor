@@ -7,6 +7,9 @@ import {
 } from '@angular/core';
 import { FirebaseService } from '../../services/firebase.service';
 import SwiperCore, { Pagination } from 'swiper';
+import { ViewChild } from '@angular/core';
+import { SwiperComponent } from 'swiper/angular';
+import { Router } from '@angular/router';
 
 SwiperCore.use([Pagination]);
 
@@ -16,7 +19,12 @@ SwiperCore.use([Pagination]);
   encapsulation: ViewEncapsulation.None,
 })
 export class MainComponent implements OnInit, AfterViewInit {
-  constructor(public firebaseService: FirebaseService) {}
+  @ViewChild('swiperRef', { static: false }) sliderRef?: SwiperComponent;
+
+  constructor(
+    public firebaseService: FirebaseService,
+    private router: Router
+  ) {}
 
   database: any;
   currentSlide: number = 0;
@@ -24,6 +32,9 @@ export class MainComponent implements OnInit, AfterViewInit {
   backgroundImage: string = 'assets/winter.jpg';
 
   ngOnInit(): void {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.database = this.firebaseService.lastDatabaseScreenshot;
+    this.updateBackgroundImage();
     this.firebaseService.database.subscribe((data) => {
       console.log('MainComponent: ', data);
       this.database = data;
@@ -31,11 +42,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.database = this.firebaseService.lastDatabaseScreenshot;
-    console.log(this.database);
-    this.updateBackgroundImage();
-  }
+  ngAfterViewInit(): void {}
 
   trans(event: any) {
     this.currentSlide = event[0].activeIndex;
