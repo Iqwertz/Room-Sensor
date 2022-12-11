@@ -17,6 +17,7 @@ import { ChartButtonComponent } from './components/chart-button/chart-button.com
 import { SimpleViewButtonComponent } from './components/simple-view-button/simple-view-button.component';
 import { ChartOptionsComponent } from './components/chart-options/chart-options.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     SwiperModule,
     FontAwesomeModule,
     NgChartsModule,
+    FormsModule,
   ],
   providers: [{ provide: FIREBASE_OPTIONS, useValue: firebaseConfig }],
   bootstrap: [AppComponent],

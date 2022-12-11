@@ -13,6 +13,11 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        .box-title {
+            font-family: "Quicksand", sans-serif;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
         .box-body {
             .box-body-item {
                 display: flex;
@@ -22,12 +27,21 @@
                 margin-bottom: 10px;
                 fa-icon {
                     font-size: 40px;
-                    font-weight: 600;
                     display: none;
                 }
                 .box-body-item-value {
-                    font-size: 20px;
-                    font-weight: 600;
+                    display: flex;
+                    flex-direction: row;
+                    font-family: "Quicksand", sans-serif;
+                    margin: 1px;
+                    font-size: 25px;
+                    width: 100%;
+                    align-items: center;
+                    justify-content: center;
+                    .unit {
+                        color: #999;
+                        margin-left: 5px;
+                    }
                 }
             }
         }

@@ -6,25 +6,29 @@
             <div class="box-body-item">
                 <fa-icon [icon]="faTemperature"></fa-icon>
                 <div class="box-body-item-value">
-                    {{ roundFloat(getMostRecentData(data.value).temperature, 2) }} °C
+                    {{ roundFloat(getMostRecentData(data.value).temperature, 2) }}
+                    <div class="unit">°C</div>
                 </div>
             </div>
             <div class="box-body-item">
                 <fa-icon [icon]="faHumidity"></fa-icon>
                 <div class="box-body-item-value">
-                    {{ roundFloat(getMostRecentData(data.value).humidity, 2) }} %
+                    {{ roundFloat(getMostRecentData(data.value).humidity, 2) }}
+                    <div class="unit">%</div>
                 </div>
             </div>
             <div class="box-body-item">
                 <fa-icon [icon]="faGauge"></fa-icon>
                 <div class="box-body-item-value">
-                    {{ roundFloat(getMostRecentData(data.value).pressure, 2) }} hPa
+                    {{ roundFloat(getMostRecentData(data.value).pressure, 2) }}
+                    <div class="unit">hPa</div>
                 </div>
             </div>
             <div class="box-body-item">
                 <fa-icon [icon]="faLight"></fa-icon>
                 <div class="box-body-item-value">
-                    {{ roundFloat(getMostRecentData(data.value).light, 2) }} Lux
+                    {{ roundFloat(getMostRecentData(data.value).light, 2) }}
+                    <div class="unit">Lux</div>
                 </div>
             </div>
         </div>

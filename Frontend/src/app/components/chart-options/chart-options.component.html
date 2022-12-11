@@ -1,6 +1,16 @@
 <div class="container">
     <div class="time-options">
-        <div class="time-option"></div>
+        <div class="time-option">
+            <div class="time-option-name">Range</div>
+            <div class="time-option-value">
+                Start:
+                <input type="date" [(ngModel)]="timeOptions.start" (change)="updateDate()" />
+            </div>
+            <div class="time-option-value">
+                End:
+                <input type="date" [(ngModel)]="timeOptions.end" (change)="updateDate()" />
+            </div>
+        </div>
         <div class="room" *ngFor="let room of options | keyvalue">
             <div class="room-name">{{ room.key }}</div>
             <div class="room-options">

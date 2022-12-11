@@ -34,8 +34,8 @@ export interface DatabaseSelectOptions {
 
 export interface TimeIntervalSelectOption {
   //TODO: implement
-  start: number;
-  end: number;
+  start: Date;
+  end: Date;
 }
 
 export interface DatabaseSelectOptionsEntry {
@@ -73,8 +73,8 @@ export class ChartContainerComponent implements OnInit {
 
   selectOptions: DatabaseSelectOptions | null = null;
   timeInterval: TimeIntervalSelectOption = {
-    start: -1,
-    end: -1,
+    start: new Date(2021, 0, 1),
+    end: new Date(),
   };
 
   constructor(private firebaseService: FirebaseService) {}
@@ -104,7 +104,10 @@ export class ChartContainerComponent implements OnInit {
     this.lineChartData.labels = [];
 
     for (const [roomKey, roomValue] of Object.entries(data)) {
-      let convertedData = this.convertToSensorDataObject(roomValue);
+      let convertedData = this.convertToSensorDataObject(
+        roomValue,
+        this.timeInterval
+      );
       let options = this.selectOptions[roomKey];
 
       let counter = 0;
@@ -154,7 +157,10 @@ export class ChartContainerComponent implements OnInit {
     return sum / a.length;
   }
 
-  convertToSensorDataObject(data: FirebaseSensorData): sensorDataObject {
+  convertToSensorDataObject(
+    data: FirebaseSensorData,
+    dateRange: TimeIntervalSelectOption
+  ): sensorDataObject {
     const sensorData: sensorDataObject = {
       temperature: [],
       humidity: [],
@@ -165,6 +171,12 @@ export class ChartContainerComponent implements OnInit {
 
     for (const [key, value] of Object.entries(data)) {
       if (!value) return sensorData;
+      console.log(dateRange);
+      if (
+        value.timestamp < new Date(dateRange.start).getTime() ||
+        value.timestamp > new Date(dateRange.end).getTime() + 86400000
+      )
+        continue;
       sensorData.temperature.push(value.temperature);
       sensorData.humidity.push(value.humidity);
       sensorData.pressure.push(value.pressure);
@@ -175,13 +187,25 @@ export class ChartContainerComponent implements OnInit {
     return sensorData;
   }
 
-  //convert timestamp to dd/mm/yyyy date
+  //convert timestamp to dd/mm/yyyy hh:mm date
   convertTimestampToDate(timestamp: number) {
     let date = new Date(timestamp);
     let day = date.getDate();
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
 
-    return day + '/' + month + '/' + year;
+    return (
+      day +
+      '/' +
+      month +
+      '/' +
+      year +
+      ' ' +
+      hours +
+      ':' +
+      (minutes < 10 ? '0' + minutes : minutes)
+    );
   }
 }
