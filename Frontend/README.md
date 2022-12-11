@@ -1,10 +1,9 @@
 # Auth Files
-create file in environments/firebase-config.ts
+Create a firebase config file at src/environments/firebase-config.ts
 
+```typescript
 export const firebaseConfig = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_AUTH_DOMAIN',
-  projectId: 'YOUR_PROJECT_ID',
-  databaseURL: 'YOUR_DATABASE_URL',
+  //config data
 };
-
+```
+To get the firebase config data, go to your firebase console and to projects settings. Under general create a new web app and copy the config data.

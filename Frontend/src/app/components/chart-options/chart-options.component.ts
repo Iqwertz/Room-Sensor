@@ -26,7 +26,6 @@ export class ChartOptionsComponent implements OnInit {
   ngOnInit(): void {}
 
   update(room: any, value: any) {
-    console.log(this.timeOptions);
     if (!this.options) return;
     this.options[room][value.key] = !this.options[room][value.key];
     this.optionsChange.emit(this.options);

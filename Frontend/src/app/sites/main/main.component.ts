@@ -36,7 +36,6 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.database = this.firebaseService.lastDatabaseScreenshot;
     this.updateBackgroundImage();
     this.firebaseService.database.subscribe((data) => {
-      console.log('MainComponent: ', data);
       this.database = data;
       this.updateBackgroundImage();
     });
@@ -60,7 +59,6 @@ export class MainComponent implements OnInit, AfterViewInit {
   }
 
   backgroundImageFromTemperature(temperature: number): string {
-    console.log('temperature: ', temperature);
     if (temperature < 5) {
       return 'assets/winter.jpg';
     } else if (temperature < 15) {

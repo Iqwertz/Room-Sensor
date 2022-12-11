@@ -12,19 +12,19 @@
 #define SEALEVELPRESSURE_HPA (946.86)
 
 // Konstanten
-#define LDR_PIN                   0
-#define MAX_ADC_READING           1023
-#define ADC_REF_VOLTAGE           5.0
-#define REF_RESISTANCE            5030  // Muss gemesen werden für optimale Ergebnisse
-#define LUX_CALC_SCALAR           12518931
-#define LUX_CALC_EXPONENT         -1.405
+#define LDR_PIN 0
+#define MAX_ADC_READING 1023
+#define ADC_REF_VOLTAGE 5.0
+#define REF_RESISTANCE 5030 // Muss gemesen werden für optimale Ergebnisse
+#define LUX_CALC_SCALAR 12518931
+#define LUX_CALC_EXPONENT -1.405
 
 // WiFi network and Firebase details
 #include "credentials.h"
 
 bool useTwoSensors = true;
 
-Adafruit_BME280 bme; // I2C
+Adafruit_BME280 bme;  // I2C
 Adafruit_BME280 bme2; // I2C
 
 int lightSensorPin = A0;
@@ -41,13 +41,15 @@ FirebaseConfig config;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", 0);
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
 
   // Connect to WiFi
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     Serial.print(".");
     delay(500);
   }
@@ -57,7 +59,6 @@ void setup() {
 
   Serial.println("Starting TimeClient");
   timeClient.begin();
-
 
   // Connect to Firebase
   Serial.println("Connecting to Firebase");
@@ -92,23 +93,28 @@ void setup() {
   Serial.println("Connected to Firebase");
 
   // Initialize BME280 sensor
-  bool status = bme.begin(0x76);
+  bool status = bme.begin(0x76); //
 
-  if (!status) {
+  if (!status)
+  {
     Serial.println("Could not find a valid BME280 sensor at address 0x76, check wiring!");
-    while (1);
+    while (1)
+      ;
   }
 
-  if (useTwoSensors) {
+  if (useTwoSensors)
+  {
     status = bme2.begin(0x77);
 
-    if (!status) {
+    if (!status)
+    {
       Serial.println("Could not find a valid second BME280 sensor at address 0x77, check wiring!");
     }
   }
 }
 
-void loop() {
+void loop()
+{
 
   Serial.println("Getting Time");
   timeClient.update();
@@ -136,7 +142,7 @@ void loop() {
   Serial.println("");
 
   char strTimestamp[20];
-  dtostrf(timestamp, 0 , 0 , strTimestamp);
+  dtostrf(timestamp, 0, 0, strTimestamp);
 
   String path = "/UsersData/";
   path += ROOM_NAME; //<- user uid of current user that sign in with Emal/Password
@@ -153,9 +159,8 @@ void loop() {
   // Set data with timestamp
   Serial.printf("Set data with timestamp... %s\n", Firebase.RTDB.setJSON(&fbdo, path, &json) ? fbdo.to<FirebaseJson>().raw() : fbdo.errorReason().c_str());
 
-
-
-  if (useTwoSensors) {
+  if (useTwoSensors)
+  {
     // Read values from BME280 sensor
     float temperature = bme2.readTemperature();
     float pressure = bme2.readPressure() / 100.0; // convert to hPa
@@ -177,7 +182,7 @@ void loop() {
     Serial.println("");
 
     char strTimestamp[20];
-    dtostrf(timestamp, 0 , 0 , strTimestamp);
+    dtostrf(timestamp, 0, 0, strTimestamp);
 
     String path = "/UsersData/";
     path += ROOM_NAME2; //<- user uid of current user that sign in with Emal/Password
@@ -196,12 +201,13 @@ void loop() {
   }
 
   // Put the device into deep sleep mode for 15 minutes
-  //delay(1* 30 * 1000);
+  // delay(1* 30 * 1000);
   ESP.deepSleep(15 * 60 * 1000000);
 }
 
-float Lux() {    //funktion von StackOverflow
-  int   ldrRawData;
+float Lux()
+{ // funktion von StackOverflow
+  int ldrRawData;
   float resistorVoltage, ldrVoltage;
   float ldrResistance;
   float ldrLux;

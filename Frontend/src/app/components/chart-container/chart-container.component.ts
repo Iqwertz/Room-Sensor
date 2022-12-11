@@ -131,8 +131,6 @@ export class ChartContainerComponent implements OnInit {
       }
     }
     this.chart?.update();
-
-    console.log(this.lineChartData);
   }
 
   generateSelectOptions(data: FirebaseRooms) {
@@ -171,7 +169,6 @@ export class ChartContainerComponent implements OnInit {
 
     for (const [key, value] of Object.entries(data)) {
       if (!value) return sensorData;
-      console.log(dateRange);
       if (
         value.timestamp < new Date(dateRange.start).getTime() ||
         value.timestamp > new Date(dateRange.end).getTime() + 86400000
