@@ -31,7 +31,7 @@ export class CurrentSensorDataComponent implements OnInit {
     let dataArr = Object.keys(data).map((key) => data[key]);
     //sort by timestamp
     dataArr.sort((a, b) => {
-      return a.timestamp - b.timestamp;
+      return a.ts - b.ts;
     });
     //return last element
     return dataArr[dataArr.length - 1];

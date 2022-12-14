@@ -13,9 +13,9 @@
 
 // Konstanten
 #define LDR_PIN 0
-#define MAX_ADC_READING 1023
+#define MAX_ADC_READING 1025
 #define ADC_REF_VOLTAGE 5.0
-#define REF_RESISTANCE 5030 // Muss gemesen werden für optimale Ergebnisse
+#define REF_RESISTANCE 8530 // Muss gemesen werden für optimale Ergebnisse
 #define LUX_CALC_SCALAR 12518931
 #define LUX_CALC_EXPONENT -1.405
 
@@ -28,6 +28,8 @@ Adafruit_BME280 bme;  // I2C
 Adafruit_BME280 bme2; // I2C
 
 int lightSensorPin = A0;
+const bool lightSampleSize = 10;
+const int measureDelay = 25;
 
 FirebaseData firebaseData;
 /* Define the Firebase Data object */
@@ -151,11 +153,11 @@ void loop()
   path += "/";
 
   FirebaseJson json;
-  json.set("temperature", temperature);
-  json.set("pressure", pressure);
-  json.set("humidity", humidity);
-  json.set("light", light);
-  json.set("timestamp/.sv", "timestamp"); // .sv is the required place holder for sever value which currently supports only string "timestamp" as a value
+  json.set("t", temperature);
+  json.set("p", pressure);
+  json.set("h", humidity);
+  json.set("l", light);
+  json.set("ts/.sv", "timestamp"); // .sv is the required place holder for sever value which currently supports only string "timestamp" as a value
   // Set data with timestamp
   Serial.printf("Set data with timestamp... %s\n", Firebase.RTDB.setJSON(&fbdo, path, &json) ? fbdo.to<FirebaseJson>().raw() : fbdo.errorReason().c_str());
 
@@ -191,11 +193,11 @@ void loop()
     path += "/";
 
     FirebaseJson json;
-    json.set("temperature", temperature);
-    json.set("pressure", pressure);
-    json.set("humidity", humidity);
-    json.set("light", light);
-    json.set("timestamp/.sv", "timestamp"); // .sv is the required place holder for sever value which currently supports only string "timestamp" as a value
+    json.set("t", temperature);
+    json.set("p", pressure);
+    json.set("h", humidity);
+    json.set("l", light);
+    json.set("ts/.sv", "timestamp"); // .sv is the required place holder for sever value which currently supports only string "timestamp" as a value
     // Set data with timestamp
     Serial.printf("Set data with timestamp... %s\n", Firebase.RTDB.setJSON(&fbdo, path, &json) ? fbdo.to<FirebaseJson>().raw() : fbdo.errorReason().c_str());
   }
@@ -213,22 +215,29 @@ float Lux()
   float ldrLux;
 
   // Perform the analog to digital conversion
-  ldrRawData = analogRead(lightSensorPin);
 
-  // RESISTOR VOLTAGE_CONVERSION
-  // Convert the raw digital data back to the voltage that was measured on the analog pin
-  resistorVoltage = (float)ldrRawData / MAX_ADC_READING * ADC_REF_VOLTAGE;
+  int sum = 0;
+  for (int i = 0; i < lightSampleSize; i++) {
+    ldrRawData = analogRead(lightSensorPin);
+    sum += ldrRawData;
+    delay(measureDelay);
+  }
+  return sum/lightSampleSize;
+  /*
+    // RESISTOR VOLTAGE_CONVERSION
+    // Convert the raw digital data back to the voltage that was measured on the analog pin
+    resistorVoltage = (float)ldrRawData / MAX_ADC_READING * ADC_REF_VOLTAGE;
 
-  // voltage across the LDR is the 5V supply minus the 5k resistor voltage
-  ldrVoltage = ADC_REF_VOLTAGE - resistorVoltage;
+    // voltage across the LDR is the 5V supply minus the 5k resistor voltage
+    ldrVoltage = ADC_REF_VOLTAGE - resistorVoltage;
 
-  // LDR_RESISTANCE_CONVERSION
-  // resistance that the LDR would have for that voltage
-  ldrResistance = ldrVoltage / resistorVoltage * REF_RESISTANCE;
+    // LDR_RESISTANCE_CONVERSION
+    // resistance that the LDR would have for that voltage
+    ldrResistance = ldrVoltage / resistorVoltage * REF_RESISTANCE;
 
-  // LDR_LUX
-  // Change the code below to the proper conversion from ldrResistance to
-  // ldrLux
-  ldrLux = LUX_CALC_SCALAR * pow(ldrResistance, LUX_CALC_EXPONENT);
-  return ldrLux;
+    // LDR_LUX
+    // Change the code below to the proper conversion from ldrResistance to
+    // ldrLux
+    ldrLux = LUX_CALC_SCALAR * pow(ldrResistance, LUX_CALC_EXPONENT);
+    return ldrLux;*/
 }
