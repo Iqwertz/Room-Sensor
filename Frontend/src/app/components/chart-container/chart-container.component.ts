@@ -21,11 +21,11 @@ export interface FirebaseSensorData {
 }
 
 export interface FirebaseSensorDataEntry {
-  temperature: number;
-  humidity: number;
-  pressure: number;
-  light: number;
-  timestamp: number;
+  t: number; //temperature
+  h: number; //humidity
+  p: number; //pressure
+  l: number; //light
+  ts: number; //timestamp
 }
 
 export interface DatabaseSelectOptions {
@@ -67,6 +67,7 @@ export class ChartContainerComponent implements OnInit {
   public lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
+    normalized: true,
   };
 
   public lineChartLegend = true;
@@ -102,7 +103,7 @@ export class ChartContainerComponent implements OnInit {
 
     this.lineChartData.datasets = [];
     this.lineChartData.labels = [];
-
+    let counter = 0;
     for (const [roomKey, roomValue] of Object.entries(data)) {
       let convertedData = this.convertToSensorDataObject(
         roomValue,
@@ -110,7 +111,6 @@ export class ChartContainerComponent implements OnInit {
       );
       let options = this.selectOptions[roomKey];
 
-      let counter = 0;
       //add converted Data to lineChartData
       for (const [key, value] of Object.entries(convertedData)) {
         if (key == 'timestamps') {
@@ -124,10 +124,12 @@ export class ChartContainerComponent implements OnInit {
             tension: 0.4,
             borderColor: environment.chartBorderColors[counter],
             backgroundColor: 'rgba(255,0,0,0.3)',
+            pointBorderWidth: 0,
+            pointRadius: 0,
           });
-
-          counter++;
         }
+        counter++;
+        if (counter >= environment.chartBorderColors.length) counter = 0;
       }
     }
     this.chart?.update();
@@ -139,7 +141,7 @@ export class ChartContainerComponent implements OnInit {
     for (const [roomKey, roomValue] of Object.entries(data)) {
       this.selectOptions[roomKey] = {
         temperature: true,
-        humidity: true,
+        humidity: false,
         pressure: false,
         light: false,
       };
@@ -170,15 +172,15 @@ export class ChartContainerComponent implements OnInit {
     for (const [key, value] of Object.entries(data)) {
       if (!value) return sensorData;
       if (
-        value.timestamp < new Date(dateRange.start).getTime() ||
-        value.timestamp > new Date(dateRange.end).getTime() + 86400000
+        value.ts < new Date(dateRange.start).getTime() ||
+        value.ts > new Date(dateRange.end).getTime() + 86400000
       )
         continue;
-      sensorData.temperature.push(value.temperature);
-      sensorData.humidity.push(value.humidity);
-      sensorData.pressure.push(value.pressure);
-      sensorData.light.push(value.light);
-      sensorData.timestamps.push(this.convertTimestampToDate(value.timestamp));
+      sensorData.temperature.push(value.t);
+      sensorData.humidity.push(value.h);
+      sensorData.pressure.push(value.p);
+      sensorData.light.push(value.l);
+      sensorData.timestamps.push(this.convertTimestampToDate(value.t));
     }
 
     return sensorData;

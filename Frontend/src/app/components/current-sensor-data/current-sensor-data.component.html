@@ -6,28 +6,28 @@
             <div class="box-body-item">
                 <fa-icon [icon]="faTemperature"></fa-icon>
                 <div class="box-body-item-value">
-                    {{ roundFloat(getMostRecentData(data.value).temperature, 2) }}
+                    {{ roundFloat(getMostRecentData(data.value).t, 2) }}
                     <div class="unit">°C</div>
                 </div>
             </div>
             <div class="box-body-item">
                 <fa-icon [icon]="faHumidity"></fa-icon>
                 <div class="box-body-item-value">
-                    {{ roundFloat(getMostRecentData(data.value).humidity, 2) }}
+                    {{ roundFloat(getMostRecentData(data.value).h, 2) }}
                     <div class="unit">%</div>
                 </div>
             </div>
             <div class="box-body-item">
                 <fa-icon [icon]="faGauge"></fa-icon>
                 <div class="box-body-item-value">
-                    {{ roundFloat(getMostRecentData(data.value).pressure, 2) }}
+                    {{ roundFloat(getMostRecentData(data.value).p, 2) }}
                     <div class="unit">hPa</div>
                 </div>
             </div>
             <div class="box-body-item">
                 <fa-icon [icon]="faLight"></fa-icon>
                 <div class="box-body-item-value">
-                    {{ roundFloat(getMostRecentData(data.value).light, 2) }}
+                    {{ roundFloat(getMostRecentData(data.value).l, 2) }}
                     <div class="unit">Lux</div>
                 </div>
             </div>
@@ -35,7 +35,7 @@
 
         <div class="timestamp">
             <div class="box-body-item-value">
-                {{ formatTimestamp( roundFloat(getMostRecentData(data.value).timestamp, 2) ) }}
+                {{ formatTimestamp(roundFloat(getMostRecentData(data.value).ts, 2)) }}
             </div>
         </div>
     </div>
