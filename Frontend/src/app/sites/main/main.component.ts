@@ -4,6 +4,7 @@ import {
   OnInit,
   AfterViewInit,
   ViewEncapsulation,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { FirebaseService } from '../../services/firebase.service';
 import SwiperCore, { Pagination } from 'swiper';
@@ -23,7 +24,8 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   constructor(
     public firebaseService: FirebaseService,
-    private router: Router
+    private router: Router,
+    private ref: ChangeDetectorRef
   ) {}
 
   database: any;
@@ -51,13 +53,11 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   updateBackgroundImage() {
     if (!this.database) return;
-
     let room = this.database[Object.keys(this.database)[this.currentSlide]];
     this.backgroundImage = this.backgroundImageFromTemperature(
       this.getMostRecentData(room).t
     );
-
-    console.log(this.backgroundImage);
+    this.ref.detectChanges();
   }
 
   backgroundImageFromTemperature(temperature: number): string {
