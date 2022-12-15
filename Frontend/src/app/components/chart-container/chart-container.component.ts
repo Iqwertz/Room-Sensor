@@ -74,7 +74,8 @@ export class ChartContainerComponent implements OnInit {
 
   selectOptions: DatabaseSelectOptions | null = null;
   timeInterval: TimeIntervalSelectOption = {
-    start: new Date(2021, 0, 1),
+    //set start date to yesterday
+    start: new Date(new Date().setDate(new Date().getDate() - 1)),
     end: new Date(),
   };
 
@@ -123,9 +124,10 @@ export class ChartContainerComponent implements OnInit {
             fill: false,
             tension: 0.4,
             borderColor: environment.chartBorderColors[counter],
-            backgroundColor: 'rgba(255,0,0,0.3)',
+            backgroundColor: environment.chartBorderColors[counter],
             pointBorderWidth: 0,
             pointRadius: 0,
+            pointHoverRadius: 5,
           });
         }
         counter++;
@@ -180,7 +182,7 @@ export class ChartContainerComponent implements OnInit {
       sensorData.humidity.push(value.h);
       sensorData.pressure.push(value.p);
       sensorData.light.push(value.l);
-      sensorData.timestamps.push(this.convertTimestampToDate(value.t));
+      sensorData.timestamps.push(this.convertTimestampToDate(value.ts));
     }
 
     return sensorData;

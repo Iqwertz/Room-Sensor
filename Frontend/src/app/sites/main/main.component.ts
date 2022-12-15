@@ -56,6 +56,8 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.backgroundImage = this.backgroundImageFromTemperature(
       this.getMostRecentData(room).t
     );
+
+    console.log(this.backgroundImage);
   }
 
   backgroundImageFromTemperature(temperature: number): string {
