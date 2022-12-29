@@ -1,6 +1,12 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
+import { GeneralOptions } from '../app/components/chart-container/chart-container.component';
+
+const genOpt: GeneralOptions = {
+  smoothGraph: true,
+  maxDataPoints: 100,
+};
 
 export const environment = {
   production: false,
@@ -19,6 +25,7 @@ export const environment = {
     '#ef8250',
     '#d43d51',
   ],
+  generalOptions: genOpt,
 };
 
 /*

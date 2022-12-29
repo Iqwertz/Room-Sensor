@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { GeneralOptions } from '../chart-container/chart-container.component';
 
 import {
   DatabaseSelectOptions,
@@ -14,6 +15,9 @@ export class ChartOptionsComponent implements OnInit {
   //Dual way bind chart options
   @Input() options: DatabaseSelectOptions | null = null;
   @Output() optionsChange = new EventEmitter<any>();
+
+  @Input() generalOptions: GeneralOptions | null = null;
+  @Output() generalOptionsChange = new EventEmitter<any>();
 
   @Input() timeOptions: TimeIntervalSelectOption = {
     start: new Date(),
@@ -31,6 +35,11 @@ export class ChartOptionsComponent implements OnInit {
     this.optionsChange.emit(this.options);
   }
 
+  updateGeneral() {
+    if (!this.generalOptions) return;
+    this.generalOptionsChange.emit(this.generalOptions);
+  }
+
   updateDate() {
     if (!this.timeOptions) return;
     if (this.timeOptions.start > this.timeOptions.end) {
@@ -38,5 +47,6 @@ export class ChartOptionsComponent implements OnInit {
     }
     this.timeOptionsChange.emit(this.timeOptions);
     this.optionsChange.emit(this.options);
+    this.generalOptionsChange.emit(this.generalOptions);
   }
 }

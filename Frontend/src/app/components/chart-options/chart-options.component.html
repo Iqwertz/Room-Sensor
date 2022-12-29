@@ -1,5 +1,19 @@
 <div class="container">
     <div class="time-options">
+        <div class="general-options" *ngIf="generalOptions">
+            <div class="option">
+                <div class="option-name">Smooth Graph</div>
+                <div class="option-value">
+                    <input type="checkbox" [(ngModel)]="generalOptions.smoothGraph" (change)="updateGeneral()" />
+                </div>
+            </div>
+            <div class="option">
+                <div class="option-name">Max. data points</div>
+                <div class="option-value">
+                    <input type="number" [(ngModel)]="generalOptions.maxDataPoints" (change)="updateGeneral()" />
+                </div>
+            </div>
+        </div>
         <div class="time-option">
             <div class="time-option-name">Range</div>
             <div class="time-option-value">

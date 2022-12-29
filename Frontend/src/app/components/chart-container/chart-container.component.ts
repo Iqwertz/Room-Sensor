@@ -28,6 +28,11 @@ export interface FirebaseSensorDataEntry {
   ts: number; //timestamp
 }
 
+export interface GeneralOptions {
+  smoothGraph: boolean;
+  maxDataPoints: number;
+}
+
 export interface DatabaseSelectOptions {
   [key: string]: DatabaseSelectOptionsEntry;
 }
@@ -72,6 +77,7 @@ export class ChartContainerComponent implements OnInit {
 
   public lineChartLegend = true;
 
+  generalOptions: GeneralOptions = environment.generalOptions;
   selectOptions: DatabaseSelectOptions | null = null;
   timeInterval: TimeIntervalSelectOption = {
     //set start date to yesterday
@@ -115,11 +121,21 @@ export class ChartContainerComponent implements OnInit {
       //add converted Data to lineChartData
       for (const [key, value] of Object.entries(convertedData)) {
         if (key == 'timestamps') {
-          this.lineChartData.labels = value;
+          let timeStamps = value;
+          if (this.generalOptions.smoothGraph) {
+            timeStamps = this.smoothValues(value, true);
+          }
+          this.lineChartData.labels = timeStamps;
         } else {
           if (!options[key]) continue;
+
+          let cleanValue = value;
+          if (this.generalOptions.smoothGraph) {
+            cleanValue = this.smoothValues(value, false);
+          }
+
           this.lineChartData.datasets.push({
-            data: value,
+            data: cleanValue,
             label: roomKey + '/' + key,
             fill: false,
             tension: 0.4,
@@ -150,12 +166,31 @@ export class ChartContainerComponent implements OnInit {
     }
   }
 
+  smoothValues(a: number[], isDate: boolean): number[] {
+    let b: number[] = [];
+    //split a into x chunks
+    let chunkSize = Math.floor(a.length / this.generalOptions.maxDataPoints);
+    if (chunkSize < 1) chunkSize = 1;
+    for (let i = 0; i < a.length; i++) {
+      let chunk: number[] = [];
+      for (let j = 0; j < chunkSize; j++) {
+        if (i + j >= a.length) break;
+        chunk.push(a[i + j]);
+      }
+      if (isDate) {
+        b.push(chunk[0]);
+      } else {
+        b.push(this.calculateAverage(chunk));
+      }
+    }
+    return b;
+  }
+
   calculateAverage(a: number[]) {
     let sum: number = 0;
     for (let n of a) {
       sum += n;
     }
-
     return sum / a.length;
   }
 

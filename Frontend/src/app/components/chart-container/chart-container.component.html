@@ -1,6 +1,6 @@
 <div class="container">
     <div class="options">
-        <app-chart-options [(timeOptions)]="timeInterval" [(options)]="selectOptions" (optionsChange)="updateChart()"></app-chart-options>
+        <app-chart-options [(timeOptions)]="timeInterval" [(options)]="selectOptions" (optionsChange)="updateChart()" [(generalOptions)]="generalOptions" (generalOptionsChange)="updateChart()"></app-chart-options>
     </div>
     <div class="chart">
         <canvas baseChart [type]="'line'" [data]="lineChartData" [options]="lineChartOptions" [legend]="lineChartLegend">
