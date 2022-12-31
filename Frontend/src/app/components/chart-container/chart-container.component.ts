@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { FirebaseService } from '../../services/firebase.service';
@@ -88,11 +88,31 @@ export class ChartContainerComponent implements OnInit {
   constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit(): void {
+    if (localStorage.getItem('roomSettings')) {
+      this.selectOptions = JSON.parse(
+        localStorage.getItem('roomSettings') || '{}'
+      );
+    }
+
+    if (localStorage.getItem('generalSettings')) {
+      this.generalOptions = JSON.parse(
+        localStorage.getItem('generalSettings') || '{}'
+      );
+    }
+
     this.generateChart(this.firebaseService.lastDatabaseScreenshot);
 
     this.firebaseService.database.subscribe((data: FirebaseRooms) => {
       this.generateChart(data);
     });
+  }
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHandler(event: any) {
+    localStorage.setItem('roomSettings', JSON.stringify(this.selectOptions));
+    localStorage.setItem(
+      'generalSettings',
+      JSON.stringify(this.generalOptions)
+    );
   }
 
   updateChart() {
@@ -168,7 +188,6 @@ export class ChartContainerComponent implements OnInit {
 
   smoothValues(a: number[], isDate: boolean): number[] {
     let b: number[] = [];
-    //split a into x chunks
     let chunkSize = Math.floor(a.length / this.generalOptions.maxDataPoints);
     if (chunkSize < 1) chunkSize = 1;
     for (let i = 0; i < a.length; i++) {
