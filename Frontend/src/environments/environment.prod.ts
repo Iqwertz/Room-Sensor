@@ -1,3 +1,10 @@
+import { GeneralOptions } from '../app/components/chart-container/chart-container.component';
+
+const genOpt: GeneralOptions = {
+  smoothGraph: true,
+  maxDataPoints: 100,
+};
+
 export const environment = {
   production: true,
   chartBorderColors: [
@@ -15,4 +22,5 @@ export const environment = {
     '#ef8250',
     '#d43d51',
   ],
+  generalOptions: genOpt,
 };
